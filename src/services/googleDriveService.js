@@ -3,8 +3,9 @@
 
 class GoogleDriveService {
   constructor() {
-    this.apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-    this.clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    // Vite uses import.meta.env instead of process.env
+    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+    this.clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     this.discoveryDoc = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
     this.scopes = 'https://www.googleapis.com/auth/drive.readonly';
     this.gapi = null;

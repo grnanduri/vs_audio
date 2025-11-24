@@ -76,9 +76,11 @@ Create two folders in your Google Drive:
 ### 5. Configure Environment Variables
 Create a `.env` file in the project root:
 ```env
-REACT_APP_GOOGLE_API_KEY=your_api_key_here
-REACT_APP_GOOGLE_CLIENT_ID=your_client_id_here
+VITE_GOOGLE_API_KEY=your_api_key_here
+VITE_GOOGLE_CLIENT_ID=your_client_id_here
 ```
+
+**Note:** Vite uses the `VITE_` prefix for environment variables (not `REACT_APP_`).
 
 ## 🎵 Usage
 
@@ -137,6 +139,83 @@ src/
     └── googleDriveService.js  # Google Drive API integration
 ```
 
+## 🚀 Deploying to GitHub Pages
+
+This app can be deployed to GitHub Pages for free hosting. The deployment is automated via GitHub Actions.
+
+### Prerequisites
+
+1. Push your code to a GitHub repository
+2. Have your Google API credentials ready
+
+### Step-by-Step Deployment
+
+1. **Update the base path in `vite.config.js`:**
+   - If your repository is named `vs_audio`, the base path should be `/vs_audio/`
+   - If deploying to a custom domain or root, use `/`
+   - The current config uses `/vs_audio/` - update if your repo name is different
+
+2. **Set up GitHub Secrets:**
+   - Go to your repository on GitHub
+   - Navigate to **Settings** → **Secrets and variables** → **Actions**
+   - Click **New repository secret** and add:
+     - `VITE_GOOGLE_API_KEY` - Your Google API Key
+     - `VITE_GOOGLE_CLIENT_ID` - Your Google OAuth Client ID
+     - `VITE_TUTORIAL_FOLDER_ID` (optional) - Tutorial folder ID
+     - `VITE_NON_TUTORIAL_FOLDER_ID` (optional) - Non-Tutorial folder ID
+
+3. **Update Google OAuth Settings:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Navigate to **APIs & Services** → **Credentials**
+   - Edit your OAuth 2.0 Client ID
+   - Add your GitHub Pages URL to **Authorized JavaScript origins**:
+     ```
+     https://[your-username].github.io
+     ```
+   - Add to **Authorized redirect URIs**:
+     ```
+     https://[your-username].github.io/vs_audio/
+     ```
+   - Replace `[your-username]` and `vs_audio` with your actual GitHub username and repository name
+
+4. **Enable GitHub Pages:**
+   - Go to **Settings** → **Pages**
+   - Under **Source**, select **GitHub Actions**
+   - The workflow will automatically deploy on every push to `main`
+
+5. **Deploy:**
+   ```bash
+   git add .
+   git commit -m "Configure GitHub Pages deployment"
+   git push origin main
+   ```
+
+6. **Access your app:**
+   Your app will be available at:
+   ```
+   https://[your-username].github.io/vs_audio/
+   ```
+
+### Manual Deployment
+
+If you prefer to deploy manually:
+
+```bash
+# Build the app
+npm run build
+
+# The dist/ folder contains the built files
+# You can deploy this folder to GitHub Pages using gh-pages or manually
+```
+
+### Important Notes
+
+- ⚠️ **Environment Variables**: Make sure all required environment variables are set as GitHub Secrets
+- ⚠️ **OAuth Redirect URIs**: Must include your GitHub Pages URL in Google Cloud Console
+- ⚠️ **Base Path**: Update `vite.config.js` if your repository name differs from `vs_audio`
+- ✅ **Automatic Deploys**: Every push to `main` will trigger a new deployment
+- ✅ **Build Artifacts**: The workflow builds and deploys automatically
+
 ## 🔒 Security Notes
 
 - Never commit your `.env` file to version control
@@ -164,7 +243,8 @@ src/
 4. **Sign-in issues**
    - Clear browser cache and cookies
    - Check OAuth redirect URIs in Google Cloud Console
-   - Ensure `http://localhost:3000` is in authorized origins
+   - Ensure your GitHub Pages URL (e.g., `https://[username].github.io/vs_audio/`) is in authorized origins
+   - For local development, ensure `http://localhost:3000` is in authorized origins
 
 ## 📱 Browser Support
 
